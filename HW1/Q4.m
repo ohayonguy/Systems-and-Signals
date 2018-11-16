@@ -3,7 +3,7 @@ clear;
 clc;
 
 %% 3
-N = 10;
+N = 10000;
 t = linspace(-pi, pi, N + 1)'; t(end) = [];
 x = t;
 
@@ -46,14 +46,21 @@ plot(t, X_fourier_M_30, 'y', 'LineWidth', 1);
 legend('x(t)', '1', '5', '30');
 
 %% 8
+t = linspace(-pi, pi, N + 1)'; t(end) = [];
+x = t;
 M = 100;
-K = 1 : M;
-Fourier_Matrix = Fourier(.K,t,x,N);
+norms = [];
+for n = 1:100
+   norms = cat(1,norms,norm(Fourier(n,t,x,N)-x,2));
+end
+
+figure(4); hold on; grid on;
+plot(1:100, norms, 'b', 'LineWidth', 1);
+legend('err(M)', '1', '5', '30');
 
 %% functions
 function X_fourier = Fourier(M,t,x,N)
     T0 = 2*pi;
-    M
     k = -M : M;
     om0 = (2*pi)/T0;
     F = exp(1j * om0 * t * k);
